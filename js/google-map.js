@@ -104,7 +104,7 @@
           _address[i] = $(_address[i]).text();
           geoCoder(_address[i], i); // use geocoder to determine latitude / longitude
         }
-      } else if(plugin.settings.currentLoc.latitude.length >= 1) { // use store cache client latitude / longitude
+      } else if(plugin.settings.currentLoc.length >= 1) { // use store cache client latitude / longitude
         markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude);
       } else {
         markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); //use fallback if google ClientLocation and geolocation fail
