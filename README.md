@@ -5,7 +5,7 @@ Google Maps plugin is an easy way to implement Google Map onto any web page. Dyn
 ## How to use it
 Attach the googleMaps to an element
 ```
-$(elementent).googleMaps();
+$(element).googleMaps();
 ```
 
 ## Plugin options
@@ -212,7 +212,7 @@ $(element).googleMaps(); // init the plugin once
 ## Plugin callback method
 This plugin has four callback.
 ```
-$(element).ellipsis({
+$(element).googleMaps({
   mapStart: function() {
     // do stuff here
   },
