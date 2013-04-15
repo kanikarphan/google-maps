@@ -104,8 +104,10 @@
           _address[i] = $(_address[i]).text();
           geoCoder(_address[i], i); // use geocoder to determine latitude / longitude
         }
+      } else if(plugin.settings.currentLoc.latitude.length >= 1) { // use store cache client latitude / longitude
+        markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude);
       } else {
-        googleLoc(); // use client geolocation
+        markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); //use fallback if google ClientLocation and geolocation fail
       }
     };
 
@@ -140,7 +142,6 @@
 
     var googleLoc = function() { // google loader ClientLocation to get latitude / longitude
       if (google.loader.ClientLocation != null) {
-        markerMngr(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
         clientLoc(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
       } else {
         geoLoc(); // use client geolocation with browser lookup
@@ -150,7 +151,6 @@
     var geoLoc = function() { // browser geolocation to get latitude / longitude
       if((plugin.settings.geolocation === 1) && (!!navigator.geolocation)) {
         navigator.geolocation.getCurrentPosition(function(pos) {
-          markerMngr(pos.coords.latitude, pos.coords.longitude); // latitude / longitude from geolocation
           clientLoc(pos.coords.latitude, pos.coords.longitude);
         }, function(error) {
           switch(error.code) { // log error message
@@ -167,7 +167,7 @@
               console.log('Unknown error');
               break;
           }
-          markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
+          clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
         });
       } else {
         markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
