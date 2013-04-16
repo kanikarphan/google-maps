@@ -80,9 +80,9 @@
 	max-width: none;
 }
 .map-canvas * { 
-	-webkit-box-sizing: content-box;
-	-moz-box-sizing: content-box;
-	box-sizing: content-box;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
 }
 .maps-info-window {
 	display: block;

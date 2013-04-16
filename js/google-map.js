@@ -166,10 +166,10 @@
               console.log('Unknown error');
               break;
           }
-          markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
+          clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
         });
       } else {
-        markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
+        clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
       }
     };
 
@@ -189,7 +189,7 @@
         var _address = _loc,
             _i = i || 0;
         _geocoder.geocode({'address': _address}, function(results, status) { // using google map geocode method and resize event
-          if (status == google.maps.GeocoderStatus.OK) {
+          if(status == google.maps.GeocoderStatus.OK) {
             var _latlng = results[0].geometry.location, 
                 _latitude = _latlng.lat(), // latitude from geocode
                 _longitude = _latlng.lng(); // longitude from geocode
@@ -235,7 +235,7 @@
 
     var infoMngr = function() { // constructor for info window
       for (_i in plugin.settings.markers) { // use store marker 
-        if (plugin.settings.markers.hasOwnProperty(_i)) {
+        if(plugin.settings.markers.hasOwnProperty(_i)) {
           _infoWindow = new google.maps.InfoWindow({
             content: '<div class="maps-info-window">' + plugin.settings.infoContent + '</div>' // wrape the content with div
           });
@@ -291,13 +291,13 @@
       _autocomplete.bindTo('bounds', _map); // google map v3 api method
       _origin.on('keypress', function(e) { // enter key to submit route
         var _keyCode = (e.keyCode ? e.keyCode : e.which);
-        if (_keyCode === 13) {
+        if(_keyCode === 13) {
           mapRoute(_origin, _destination);
         }
       });
       _destination.on('keypress', function(e) { // enter key to submit route
         var _keyCode = (e.keyCode ? e.keyCode : e.which);
-        if (_keyCode === 13) {
+        if(_keyCode === 13) {
           mapRoute(_origin, _destination);
         }
       });
@@ -314,8 +314,8 @@
       } else if(!_end) {
         _destination.focus();
       } else {
-        var _clientLati = plugin.settings.currentLoc.latitude || plugin.settings.errorLat, // use store cach client lat
-            _clientLong = plugin.settings.currentLoc.longitude || plugin.settings.errorLng; // use store cach client long
+        var _clientLati = plugin.settings.currentLoc.latitude, // use store cach client lat
+            _clientLong = plugin.settings.currentLoc.longitude; // use store cach client long
         (_start.toLowerCase().match(/^current location/)) ? _start = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for start point
         (_end.toLowerCase().match(/^current location/)) ? _end = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for end point
         _request = { // route options
@@ -324,7 +324,7 @@
           travelMode: google.maps.DirectionsTravelMode[plugin.settings.routeType] // type of travel for route 
         };
         _directionsService.route(_request, function(response, status) { // google map v3 api method
-          if (status == google.maps.DirectionsStatus.OK) {
+          if(status == google.maps.DirectionsStatus.OK) {
             _directionsDisplay.setDirections(response);
             plugin.clearMarker(); // if marker are drawn clear all marker. only show start and end marker for route
             ($.isFunction(plugin.settings.routeComplete)) ? plugin.settings.routeComplete() : 0; // for callback when the route is done rendering
@@ -350,7 +350,7 @@
 
     plugin.clearMarker = function() { // use to delete clear all marker from outside of the plugin
       for (_i in plugin.settings.markers) { 
-        if (plugin.settings.markers.hasOwnProperty(_i)) {
+        if(plugin.settings.markers.hasOwnProperty(_i)) {
           plugin.settings.markers[_i].setMap(null);
         }
       }
