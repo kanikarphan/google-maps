@@ -29,6 +29,7 @@
         _mapOptions,
         _geocoder,
         _marker,
+        _infoWindow,
         _click,
         _directionDisplay,
         _directionsRenderer,
@@ -56,6 +57,7 @@
       markerAnimation: metadata.markerAnimation || "NONE", // animations that can be played on a marker. 'NONE', 'BOUNCE', 'DROP'
       markers: {}, // store cache created marker for clearing with public method
       markersStatic: [], // use to store static marker geolocation
+      infoContent: {}, // displays content in a floating window above the map
       fitBounds: metadata.fitBounds || 0, // adjust map zoom to fit all markers into map viewport (1 || 0)
       routeShow: metadata.routeShow || 0, // enables/disables map routes (1 || 0)
       routeType: metadata.routeType || "DRIVING", // route travel type. 'DRIVING','WALKING','BICYCLING','TRANSIT'
@@ -66,7 +68,7 @@
       routeType: metadata.routeType || "DRIVING", // route travel type. 'DRIVING','WALKING','BICYCLING','TRANSIT'
       routeUnits: metadata.routeUnits || "METRIC", // specifies route distance in units 'IMPERIAL' or 'METRIC'
       autoComplete: metadata.autoComplete || "start", // bind google map auto complete to input element 'start' || 'end' || 'both'
-      geolocation: metadata.geolocation || 1, // use browser geolocation lookup if google clientlocation null (1 || 0)
+      geolocation: metadata.geolocation || 0, // use browser geolocation lookup if google clientlocation null (1 || 0)
       currentLoc: {}, // store cache client latitude / longitude
       errorLat: 33.68, // fallback if geolocation latitude fail
       errorLng: -117.79, // fallback if geolocation longitude fail
@@ -81,7 +83,7 @@
     
     plugin.settings = {} // this will hold the merged default, and user-provided options plugin properties
     
-    plugin.init = function() { // the "constructor" method that gets called when the object is created
+    plugin.init = function() { // the constructor method that gets called when the object is created
       plugin.settings = $.extend({}, defaults, options, metadata); // the plugin's final properties are the merged default and user-provided options (if any)
       ($.isFunction(plugin.settings.onStart)) ? plugin.settings.onStart() : 0; // for callback before the map is rendering
       mapMngr(); // init mapMngr method
@@ -98,16 +100,13 @@
           _address[i] = _address[i].replace(/^\s*/, '').replace(/\s*$/, ''); // trim whitespace
           geoCoder(_address[i], i); // use geocoder to determine latitude / longitude 
         }
-      } else if(plugin.settings.addressElem.length >= 1) { // use selector to get text as the address
+      }
+      if(plugin.settings.addressElem.length >= 1) { // use selector to get text as the address
         var _address = $(plugin.settings.addressElem);
         for(var i = 0; i < _address.length; i++) {
           _address[i] = $(_address[i]).text();
           geoCoder(_address[i], i); // use geocoder to determine latitude / longitude
         }
-      } else if(plugin.settings.currentLoc.length >= 1) { // use store cache client latitude / longitude
-        markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude);
-      } else {
-        markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); //use fallback if google ClientLocation and geolocation fail
       }
     };
 
@@ -141,7 +140,7 @@
     };
 
     var googleLoc = function() { // google loader ClientLocation to get latitude / longitude
-      if (google.loader.ClientLocation != null) {
+      if(google.loader.ClientLocation != null) {
         clientLoc(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
       } else {
         geoLoc(); // use client geolocation with browser lookup
@@ -167,7 +166,7 @@
               console.log('Unknown error');
               break;
           }
-          clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
+          markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
         });
       } else {
         markerMngr(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
@@ -177,6 +176,11 @@
     var clientLoc = function(_latitude, _longitude) { // cache client latitude / longitude
       plugin.settings.currentLoc.latitude = _latitude;
       plugin.settings.currentLoc.longitude = _longitude;
+      for (_i in plugin.settings.currentLoc) {
+        if(plugin.settings.currentLoc.hasOwnProperty(_i)) {
+          markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude);
+        }
+      }
     };
 
     var geoCoder = function(_loc, i) { // get latitude / longitude base on address
@@ -221,11 +225,30 @@
           animation: google.maps.Animation[plugin.settings.markerAnimation]
         });
         plugin.settings.markers[_i] = _marker; // store marker to markers object with id as its key
-        google.maps.event.addDomListener(_marker, 'click', function() { // call to handle marker click event
+        google.maps.event.addDomListener(_marker, 'click', function() { // add listener to handle marker click event
           ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
         });
       }
       (plugin.settings.fitBounds === 1) ? _map.fitBounds(_map.getBounds()) : 0; // option to fit map zoom level to show all marker 
+      (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
+    };
+
+    var infoMngr = function() { // constructor for info window
+      for (_i in plugin.settings.markers) { // use store marker 
+        if (plugin.settings.markers.hasOwnProperty(_i)) {
+          _infoWindow = new google.maps.InfoWindow({
+            content: '<div class="maps-info-window">' + plugin.settings.infoContent + '</div>' // wrape the content with div
+          });
+          infoEvent(_map, _infoWindow, plugin.settings.markers[_i]); // init infoEvent method
+        }
+      }
+    };
+
+    var infoEvent = function(_map, _infoWindow, _marker) { // clicking marker shows the info window
+      google.maps.event.addListener(_marker, 'click', function() {
+        _infoWindow.open(_map, _marker);
+        ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0; // add listener to handle marker click event
+      });
     };
 
     var mapStatic = function(_latitude, _longitude) { // static image of the map base on google maps v2 api
