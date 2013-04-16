@@ -149,7 +149,7 @@
     };
 
     var googleLoc = function() { // google loader ClientLocation to get latitude / longitude
-      if((plugin.settings.geolocation === 1) && (!!navigator.geolocation)) {
+      if((plugin.settings.geolocation === 1) && (google.loader.ClientLocation != null)) {
         clientLoc(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
       } else {
         geoLoc(); // use client geolocation with browser lookup
