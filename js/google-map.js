@@ -38,6 +38,7 @@
         _autocompOptions;
     // plugin default options. this is private property and is  accessible only from inside the plugin
     var defaults = { // default setting for plugin. (1 || 0) which is true or false
+      googleKey: metadata.googleKey || 'AIzaSyBCgJ1Dn_8puujRqEFqWtwJVeyr0Bz9Wz4', // google key is needed for static map. https://developers.google.com/maps/documentation/javascript/tutorial#api_key
       address: metadata.address || [], // pass single or multiple address. spilt multiple address with ';'
       addressElem: metadata.addressElem || [], // use to select the address element
       mapHeight: metadata.mapHeight || "100%", // set map canvas height
@@ -262,11 +263,12 @@
       var _staticType = plugin.settings.mapType.toLowerCase(), // static map type
           _staticScale = plugin.settings.staticScale,
           _mapHeight = parseInt(plugin.settings.mapHeight),
-          _mapWidth = parseInt(plugin.settings.mapWidth);
+          _mapWidth = parseInt(plugin.settings.mapWidth),
+          _googleKey= plugin.settings.googleKey;
       (plugin.settings.mapHeight === '100%') ? _mapHeight = 100 : 0;
       (plugin.settings.mapWidth === '100%') ? _mapWidth = 100 : 0;
       (plugin.settings.markerShow === 1) ? _markerStatic = plugin.settings.markersStatic.join('&') : _markerStatic = null; // static marker 
-      var mapStaticSrc = 'http://maps.google.com/maps/api/staticmap?center=' + _latitude + ',' + _longitude + '&zoom=' + plugin.settings.zoom + '&size=' + _mapWidth + 'x' + _mapHeight + '&scale=' + _staticScale + '&maptype=' + _staticType + '&markers=&' + _markerStatic + '&sensor=false'; // map image url base on google static maps api v2
+      var mapStaticSrc = 'http://maps.google.com/maps/api/staticmap?center=' + _latitude + ',' + _longitude + '&zoom=' + plugin.settings.zoom + '&size=' + _mapWidth + 'x' + _mapHeight + '&scale=' + _staticScale + '&maptype=' + _staticType + '&markers=&' + _markerStatic + '&sensor=false&key=' + _googleKey; // map image url base on google static maps api v2
       _element.html('<img class="map-static" src="' + mapStaticSrc + '" />').on('click', this, function() { // creat the static map image.
         ($.isFunction(plugin.settings.mapClick)) ? plugin.settings.mapClick() : 0; // add listener for when the static map is click
       }); 
