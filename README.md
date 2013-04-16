@@ -122,6 +122,12 @@ $(element).googleMaps();
       <td>animations that can be played on a marker. 'NONE', 'BOUNCE', 'DROP'</td>
     </tr>
     <tr>
+      <td>infoContent</td>
+      <td>string</td>
+      <td>empty</td>
+      <td>create an info window with the given content</td>
+    </tr>
+    <tr>
       <td>fitBounds</td>
       <td>boolean</td>
       <td>0</td>
