@@ -38,7 +38,6 @@
         _autocompOptions;
     // plugin default options. this is private property and is  accessible only from inside the plugin
     var defaults = { // default setting for plugin. (1 || 0) which is true or false
-      mapStatic: metadata.mapStatic || 0, // embed a google map image. if true map height and width needs to be define (1 || 0)
       address: metadata.address || [], // pass single or multiple address. spilt multiple address with ';'
       addressElem: metadata.addressElem || [], // use to select the address element
       mapHeight: metadata.mapHeight || "100%", // set map canvas height
@@ -59,6 +58,8 @@
       markersStatic: [], // use to store static marker geolocation
       infoContent: {}, // displays content in a floating window above the map
       fitBounds: metadata.fitBounds || 0, // adjust map zoom to fit all markers into map viewport (1 || 0)
+      mapStatic: metadata.mapStatic || 0, // embed a google map image. if true map height and width needs to be define (1 || 0)
+      staticScale: metadata.staticScale || 1, // scale (zoom) the image to improve legibility
       routeShow: metadata.routeShow || 0, // enables/disables map routes (1 || 0)
       routeType: metadata.routeType || "DRIVING", // route travel type. 'DRIVING','WALKING','BICYCLING','TRANSIT'
       routePanel: metadata.routePanel || ".route-panel", // select element to use as directions panel to display route info
@@ -68,6 +69,10 @@
       routeType: metadata.routeType || "DRIVING", // route travel type. 'DRIVING','WALKING','BICYCLING','TRANSIT'
       routeUnits: metadata.routeUnits || "METRIC", // specifies route distance in units 'IMPERIAL' or 'METRIC'
       autoComplete: metadata.autoComplete || "start", // bind google map auto complete to input element 'start' || 'end' || 'both'
+      textRoute: metadata.textRoute || 0, // route text html only
+      textStart: metadata.textStart || ".text-start", // route text html starting point
+      textEnd: metadata.textEnd || ".text-end", // route text html ending point
+      textPanel: metadata.textPanel || ".text-panel", // select element to use as directions panel to display route text
       geolocation: metadata.geolocation || 0, // use browser geolocation lookup if google clientlocation null (1 || 0)
       currentLoc: {}, // store cache client latitude / longitude
       errorLat: 33.68, // fallback if geolocation latitude fail
@@ -86,8 +91,12 @@
     plugin.init = function() { // the constructor method that gets called when the object is created
       plugin.settings = $.extend({}, defaults, options, metadata); // the plugin's final properties are the merged default and user-provided options (if any)
       ($.isFunction(plugin.settings.onStart)) ? plugin.settings.onStart() : 0; // for callback before the map is rendering
-      mapMngr(); // init mapMngr method
-      googleLoc(); // init googleLoc method
+      if(plugin.settings.textRoute === 1) {
+        routeText(); // init routeText method
+      } else { 
+        mapMngr(); // init mapMngr method
+        googleLoc(); // init googleLoc method
+      }
     };
 
     // private methods can be called only from inside the plugin like: methodName(arg1, arg2, ... argn)
@@ -140,7 +149,7 @@
     };
 
     var googleLoc = function() { // google loader ClientLocation to get latitude / longitude
-      if(google.loader.ClientLocation != null) {
+      if((plugin.settings.geolocation === 1) && (!!navigator.geolocation)) {
         clientLoc(google.loader.ClientLocation.latitude, google.loader.ClientLocation.longitude);
       } else {
         geoLoc(); // use client geolocation with browser lookup
@@ -168,8 +177,6 @@
           }
           clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
         });
-      } else {
-        clientLoc(plugin.settings.errorLat, plugin.settings.errorLng); // fallback if geolocation fail
       }
     };
 
@@ -178,7 +185,7 @@
       plugin.settings.currentLoc.longitude = _longitude;
       for (_i in plugin.settings.currentLoc) {
         if(plugin.settings.currentLoc.hasOwnProperty(_i)) {
-          markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude);
+          markerMngr(plugin.settings.currentLoc.latitude, plugin.settings.currentLoc.longitude, _i, 'current location');
         }
       }
     };
@@ -253,12 +260,13 @@
 
     var mapStatic = function(_latitude, _longitude) { // static image of the map base on google maps v2 api
       var _staticType = plugin.settings.mapType.toLowerCase(), // static map type
+          _staticScale = plugin.settings.staticScale,
           _mapHeight = parseInt(plugin.settings.mapHeight),
           _mapWidth = parseInt(plugin.settings.mapWidth);
       (plugin.settings.mapHeight === '100%') ? _mapHeight = 100 : 0;
       (plugin.settings.mapWidth === '100%') ? _mapWidth = 100 : 0;
       (plugin.settings.markerShow === 1) ? _markerStatic = plugin.settings.markersStatic.join('&') : _markerStatic = null; // static marker 
-      var mapStaticSrc = 'http://maps.google.com/maps/api/staticmap?center=' + _latitude + ',' + _longitude + '&zoom=' + plugin.settings.zoom + '&size=' + _mapWidth + 'x' + _mapHeight + '&maptype=' + _staticType + '&markers=&' + _markerStatic + '&sensor=false'; // map image url base on google static maps api v2
+      var mapStaticSrc = 'http://maps.google.com/maps/api/staticmap?center=' + _latitude + ',' + _longitude + '&zoom=' + plugin.settings.zoom + '&size=' + _mapWidth + 'x' + _mapHeight + '&scale=' + _staticScale + '&maptype=' + _staticType + '&markers=&' + _markerStatic + '&sensor=false'; // map image url base on google static maps api v2
       _element.html('<img class="map-static" src="' + mapStaticSrc + '" />').on('click', this, function() { // creat the static map image.
         ($.isFunction(plugin.settings.mapClick)) ? plugin.settings.mapClick() : 0; // add listener for when the static map is click
       }); 
@@ -333,6 +341,32 @@
           }
         });
       }
+    };
+
+    var routeText = function() { // use google service api to get directions html only
+      var _start = plugin.settings.textStart, // origin
+          _end = plugin.settings.textEnd, // destination
+          _panel = $(plugin.settings.textPanel), // write html to this container
+          _wrape = plugin.settings.textWrape || 'p'; // wrape each listing with this html tag
+      $.ajax({
+        dataType: 'json',
+        url: 'http://maps.googleapis.com/maps/api/directions/json?origin=' + _start + '&destination=' + _end + '&sensor=false', 
+        data: null,
+        success: function(data) {
+          var _output = '';
+          try {
+            for (_i = 0; _i < data.routes[0].legs[0].steps.length; _i++) { // loop through json to parse html
+              _output = _output + '<' + _wrape + '>' + data.routes[0].legs[0].steps[_i].html_instructions + '</' + _wrape + '>';
+            }
+            _panel.html(_output);
+          } catch(err) {
+            _panel.html('<strong>Getting route was not successful</strong>');
+          }
+        },
+        error: function() {
+          _panel.html('<strong>Getting route was not successful</strong>');
+        }
+      });
     };
 
     // public methods can be called like: plugin.methodName(arg1, arg2, ... argn) from inside the plugin or element.data('googleMaps').publicMethod(arg1, arg2, ... argn) from outside the plugin, where "element" is the element the plugin is attached to

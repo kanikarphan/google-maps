@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="css/demo.css">
   <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
   <script src="http://maps.googleapis.com/maps/api/js?sensor=true&libraries=places"></script>
-  <script src="http://www.google.com/jsapi?key=AIzaSyBCgJ1Dn_8puujRqEFqWtwJVeyr0Bz9Wz4"></script>
+  <script src="http://www.google.com/jsapi?key=AIzaSyDocsnB-Sid_L4dNkIRWiyGwBiAyYiFICQ"></script>
 </head>
 <body>
   <nav class="nav-bar ">
@@ -55,18 +55,10 @@
       <h3>Static map with multiple locations</h3>
       <div class="map-canvas" data-plugin-options='{"address":"118184 Colima Road, Rowland Heights, CA 91748; 18588 East Gale Avenue, Industry, CA 91748","mapStatic":1,"mapWidth":303,"mapHeight":200,"zoom":14}'></div>
     </div>
-    <div class="large-12 columns directions">
+    <div class="large-12 columns">
       <h3>Map with directions</h3>
       <div class="large-8 small-12 left">
-        <div class="map-canvas" data-plugin-options='{"addressElem":".multi-address li address","markerShow":1,"mapHeight":400,"routeShow":1,"autoComplete":"both","geolocation":1}'></div>
-        <ul class="multi-address hide">
-          <li>
-            <address>35960 Rancho California Road, Temecula, CA 92591</address>
-          </li>
-          <li>
-            <address>34843 Rancho California Road, Temecula, CA 92591</address>
-          </li>
-        </ul>
+        <div class="map-canvas" data-plugin-options='{"address":"35960 Rancho California Road, Temecula, CA 92591","markerShow":1,"mapHeight":200,"routeShow":1,"autoComplete":"both","geolocation":1}'></div>
         <div class="route-panel"></div>
       </div>
       <div class="large-4 small-12 columns right">
@@ -76,6 +68,15 @@
         <input name="end" class="route-end" type="text">
         <button name="submit" class="route-submit" type="submit">Get Directions</button> 
       </div>
+    </div>
+    <div class="large-12 columns">
+      <h3>Directions with no map</h3>
+      <div class="large-6 columns">
+        <h5>Origin: Los Angeles, CA</h5>
+        <h5>Destination: Honolulu, Hawaii</h5>
+      </div>
+      <ol class="large-6 columns route-text right" data-plugin-options='{"textRoute":1,"textStart":"Los Angeles, CA","textEnd":"Honolulu, Hawaii","textPanel":".route-text","textWrape":"li"}'>
+      </ol>
     </div>
   </section>
   <footer class="row">
@@ -90,7 +91,7 @@
   <script src="js/google-map.js"></script>
   <script>
     $(document).ready(function() {
-      $('.map-canvas').googleMaps();
+      $('.map-canvas, .route-text').googleMaps();
     });
   </script>
   </body>

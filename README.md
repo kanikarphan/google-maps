@@ -20,12 +20,6 @@ $(element).googleMaps();
   </thead>
   <tbody>
     <tr>
-      <td>mapStatic</td>
-      <td>boolean</td>
-      <td>0</td>
-      <td>embed a static google map image. if true map height and width needs to be define</td>
-    </tr>
-    <tr>
       <td>address</td>
       <td>string</td>
       <td>empty</td>
@@ -134,6 +128,18 @@ $(element).googleMaps();
       <td>adjust map zoom to fit all markers into map viewport</td>
     </tr>
     <tr>
+      <td>mapStatic</td>
+      <td>boolean</td>
+      <td>0</td>
+      <td>embed a static google map image. if true map height and width needs to be define</td>
+    </tr>
+    <tr>
+      <td>staticScale</td>
+      <td>number</td>
+      <td>1</td>
+      <td>scale (zoom) the image to improve legibility</td>
+    </tr>
+    <tr>
       <td>routeShow</td>
       <td>boolean</td>
       <td>0</td>
@@ -180,6 +186,36 @@ $(element).googleMaps();
       <td>string</td>
       <td>"METRIC"</td>
       <td>specifies route distance in units 'IMPERIAL' or 'METRIC'</td>
+    </tr>
+    <tr>
+      <td>autoComplete</td>
+      <td>string</td>
+      <td>"start"</td>
+      <td>bind google map auto complete to input element 'start' || 'end' || 'both'</td>
+    </tr>
+    <tr>
+      <td>textRoute</td>
+      <td>boolean</td>
+      <td>0</td>
+      <td>route text html only</td>
+    </tr>
+    <tr>
+      <td>textStart</td>
+      <td>string</td>
+      <td>".text-start"</td>
+      <td>route text html starting point</td>
+    </tr>
+    <tr>
+      <td>textEnd</td>
+      <td>string</td>
+      <td>".text-end"</td>
+      <td>route text html ending point</td>
+    </tr>
+    <tr>
+      <td>textPanel</td>
+      <td>string</td>
+      <td>".text-panel"</td>
+      <td>select element to use as directions panel to display route text</td>
     </tr>
     <tr>
       <td>autoComplete</td>
