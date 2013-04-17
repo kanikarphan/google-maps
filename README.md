@@ -20,6 +20,12 @@ $(element).googleMaps();
   </thead>
   <tbody>
     <tr>
+      <td>googleKey</td>
+      <td>string</td>
+      <td>"AIzaSyDocsnB-Sid_L4dNkIRWiyGwBiAyYiFICQ"</td>
+      <td>google key is needed for static map</td>
+    </tr>
+    <tr>
       <td>address</td>
       <td>string</td>
       <td>empty</td>
