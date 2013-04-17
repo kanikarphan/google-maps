@@ -107,11 +107,22 @@
 .route-panel table {
 	width: 100%;
 }
-ol {
+.route-text {
 	list-style-position: inside;
 	list-style-type: decimal;
 }
-ol li div {
+.route-text li {
+	border-left: 0.063em solid #cdcdcd;
+	border-right: 0.063em solid #cdcdcd;
+	border-bottom: 0.063em solid #cdcdcd;
+	padding: 0.313em 0.500em;
+}
+.route-text li:first-child {
+	border-top: 0.063em solid #cdcdcd;
+}
+.route-text li:nth-child(even) {
+	background: #f9f9f9;
+}
+.route-text li div {
 	font-size: 1em!important;
 }
-
