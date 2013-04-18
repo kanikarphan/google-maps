@@ -313,7 +313,6 @@ plugin.method(arg1, arg2, ... argn);
     </tr>
     <tr>
       <td>addMarker</td>
-      <td>6</td>
       <td>(latlng, index, address, icon source, marker clickable, marker animation)</td>
       <td>add a single marker. LatLng will need to be formatted according to google api (new google.maps.LatLng(latitude, longitude). For other argument options, refer to <a href="#plugin-options">plugin options</a></td>
     </tr>
