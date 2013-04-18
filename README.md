@@ -20,12 +20,6 @@ $(element).googleMaps();
   </thead>
   <tbody>
     <tr>
-      <td>googleKey</td>
-      <td>string</td>
-      <td>"AIzaSyDocsnB-Sid_L4dNkIRWiyGwBiAyYiFICQ"</td>
-      <td>google key is needed for static map</td>
-    </tr>
-    <tr>
       <td>address</td>
       <td>string</td>
       <td>empty</td>
@@ -297,7 +291,6 @@ plugin.method(arg1, arg2, ... argn);
   <thead>
     <tr>
       <th>Name</th>
-      <th>Numbers of Argument</th>
       <th>Argument</th>
       <th>Description</th>
     </tr>
@@ -305,19 +298,16 @@ plugin.method(arg1, arg2, ... argn);
   <tbody>
     <tr>
       <td>iconMarker</td>
-      <td>2</td>
       <td>(index, image source)</td>
       <td>update marker icon based on its index with a new icon image source.</td>
     </tr>
     <tr>
       <td>deleteMarker</td>
-      <td>1</td>
       <td>(index)</td>
       <td>remove a marker based on its index</td>
     </tr>
     <tr>
       <td>clearMarker</td>
-      <td>0</td>
       <td>none</td>
       <td>remove all marker</td>
     </tr>
@@ -325,7 +315,7 @@ plugin.method(arg1, arg2, ... argn);
       <td>addMarker</td>
       <td>6</td>
       <td>(latlng, index, address, icon source, marker clickable, marker animation)</td>
-      <td>add a single marker. LatLng will need to be formatted according to google api (new google.maps.LatLng(latitude, longitude). For other argument options, refer to <a href="#google-maps-plugin">plugin options</a></td>
+      <td>add a single marker. LatLng will need to be formatted according to google api (new google.maps.LatLng(latitude, longitude). For other argument options, refer to <a href="#plugin-options">plugin options</a></td>
     </tr>
   </tbody>
 </table>
