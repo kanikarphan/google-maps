@@ -371,7 +371,7 @@
       });
     };
 
-    // public methods can be called like: plugin.methodName(arg1, arg2, ... argn) from inside the plugin or element.data('googleMaps').publicMethod(arg1, arg2, ... argn) from outside the plugin, where "element" is the element the plugin is attached to
+    // public methods can be called like: plugin.method(arg1, arg2, ... argn) from inside the plugin or $(element).data('googleMaps').method(arg1, arg2, ... argn) from outside the plugin, where "element" is the element the plugin is attached to
     
     // public methods below are for non static maps
     plugin.iconMarker = function(_i, _iconSrc) { // use to update marker icon src from outside of the plugin

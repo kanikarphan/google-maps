@@ -3,7 +3,7 @@ Google Maps Plugin
 Google Maps plugin is an easy way to implement Google Map onto any web page. Dynamically creates the javascript version that carries over many of the different features that the Google Maps API offers.
 
 ## How to use it
-Attach the googleMaps to an element
+Attach the googleMaps to an element.
 ```
 $(element).googleMaps();
 ```
@@ -236,7 +236,7 @@ $(element).googleMaps();
 ## Plugin options taken to the next level
 All options above are configurable with HTML5 data attribute. This is a significantly cleaner solution (as long as you don’t mind the inline approach).
 
-You can use the standard approach
+You can use the standard approach.
 ```
 $(element1).googleMaps();
 $(element2).googleMaps({mapStatic: 0, address: 'foo; bar'});
@@ -244,14 +244,14 @@ $(element3).googleMaps({mapHeight: 100, mapWidth: 100});
 ```
 <strong>or</strong>
 
-HTML5 data approach
+HTML5 data approach.
 ```
 data-plugin-options='{"mapStatic":0,"address":"foo; bar"}'
 data-plugin-options='{"mapHeight":100,"mapWidth":100}'
 $(element).googleMaps(); // init the plugin once
 ```
 
-## Plugin callback method
+## Plugin callback methods
 This plugin has four callback.
 ```
 $(element).googleMaps({
@@ -272,3 +272,54 @@ $(element).googleMaps({
   }
 });
 ```
+
+## Plugin public method
+This plugin has five public method. These methods can be called from inside or outside this plugin.
+
+From outside
+```
+$(element).data('googleMaps').method(arg1, arg2, ... argn);
+```
+
+From inside
+```
+plugin.method(arg1, arg2, ... argn);
+```
+
+## Public methods
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Numbers of Argument</th>
+      <th>Argument</th>
+      <th>Description</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>iconMarker</td>
+      <td>2</td>
+      <td>(index, image source)</td>
+      <td>update marker icon based on its index with a new icon image source.</td>
+    </tr>
+    <tr>
+      <td>deleteMarker</td>
+      <td>1</td>
+      <td>(index)</td>
+      <td>remove a marker based on its index</td>
+    </tr>
+    <tr>
+      <td>clearMarker</td>
+      <td>0</td>
+      <td>none</td>
+      <td>remove all marker</td>
+    </tr>
+    <tr>
+      <td>addMarker</td>
+      <td>6</td>
+      <td>(latlng, index, address, icon source, marker clickable, marker animation)</td>
+      <td>add a single marker. LatLng will need to be formatted according to google api (new google.maps.LatLng(latitude, longitude). For other argument options, refer to <a href="#google-maps-plugin">plugin options</a></td>
+    </tr>
+  </tbody>
+</table>
