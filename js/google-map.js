@@ -245,7 +245,7 @@
       for (_i in plugin.settings.markers) { // use store marker 
         if(plugin.settings.markers.hasOwnProperty(_i)) {
           _infoWindow = new google.maps.InfoWindow({
-            content: '<div class="maps-info-window">' + plugin.settings.infoContent + '</div>' // wrape the content with div
+            content: '<div class="maps-info-window">' + plugin.settings.infoContent + '</div>' // wrap the content with div
           });
           infoEvent(_map, _infoWindow, plugin.settings.markers[_i]); // init infoEvent method
         }
@@ -349,7 +349,7 @@
       var _start = plugin.settings.textStart, // origin
           _end = plugin.settings.textEnd, // destination
           _panel = $(plugin.settings.textPanel), // write html to this container
-          _wrape = plugin.settings.textWrape || 'p'; // wrape each listing with this html tag
+          _wrap = plugin.settings.textwrap || 'p'; // wrap each listing with this html tag
       $.ajax({
         dataType: 'json',
         url: 'http://maps.googleapis.com/maps/api/directions/json?origin=' + _start + '&destination=' + _end + '&sensor=false', 
@@ -358,7 +358,7 @@
           var _output = '';
           try {
             for (_i = 0; _i < data.routes[0].legs[0].steps.length; _i++) { // loop through json to parse html
-              _output = _output + '<' + _wrape + '>' + data.routes[0].legs[0].steps[_i].html_instructions + '</' + _wrape + '>';
+              _output = _output + '<' + _wrap + '>' + data.routes[0].legs[0].steps[_i].html_instructions + '</' + _wrap + '>';
             }
             _panel.html(_output);
           } catch(err) {
