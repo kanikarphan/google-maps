@@ -57,6 +57,7 @@
       markerAnimation: metadata.markerAnimation || "NONE", // animations that can be played on a marker. 'NONE', 'BOUNCE', 'DROP'
       markers: {}, // store cache created marker for clearing with public method
       markersStatic: [], // use to store static marker geolocation
+      latLngList: [], // use to store marker cache lat / long
       infoContent: {}, // displays content in a floating window above the map
       fitBounds: metadata.fitBounds || 0, // adjust map zoom to fit all markers into map viewport (1 || 0)
       mapStatic: metadata.mapStatic || 0, // embed a google map image. if true map height and width needs to be define (1 || 0)
@@ -233,11 +234,20 @@
           animation: google.maps.Animation[plugin.settings.markerAnimation]
         });
         plugin.settings.markers[_i] = _marker; // store marker to markers object with id as its key
+        plugin.settings.latLngList[_i] = _latlng; // store marker cache lat / long
         google.maps.event.addDomListener(_marker, 'click', function() { // add listener to handle marker click event
           ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
         });
       }
-      (plugin.settings.fitBounds === 1) ? _map.fitBounds(_map.getBounds()) : 0; // option to fit map zoom level to show all marker 
+      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
+      	var _bounds = new google.maps.LatLngBounds();
+				for (_i in plugin.settings.latLngList) { // use store marker 
+          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+            _bounds.extend(plugin.settings.latLngList[_i]); //  And increase the bounds to take this point
+          }
+        }
+				_map.fitBounds(_bounds); // fit these bounds to the map
+      }
       (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
     };
 
@@ -404,7 +414,17 @@
         animation: google.maps.Animation[_animation]
       });
       plugin.settings.markers[_i] = _marker;  // add to store cache created marker
+      plugin.settings.latLngList[_i] = _latlng; // add to store cache lat / long
       _map.setCenter(_latlng); // center map base on marker lat / long
+      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
+        var _bounds = new google.maps.LatLngBounds();
+        for (_i in plugin.settings.latLngList) { // use store marker 
+          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+            _bounds.extend(plugin.settings.latLngList[_i]); //  And increase the bounds to take this point
+          }
+        }
+        _map.fitBounds(_bounds); // fit these bounds to the map
+      }
     }
 
     plugin.clearRoute = function() { // use to clear all route object
