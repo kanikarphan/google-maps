@@ -57,6 +57,7 @@
       markerAnimation: metadata.markerAnimation || "NONE", // animations that can be played on a marker. 'NONE', 'BOUNCE', 'DROP'
       markers: {}, // store cache created marker for clearing with public method
       markersStatic: [], // use to store static marker geolocation
+      latLngList: [], // use to store map cache lat / long
       infoContent: {}, // displays content in a floating window above the map
       fitBounds: metadata.fitBounds || 0, // adjust map zoom to fit all markers into map viewport (1 || 0)
       mapStatic: metadata.mapStatic || 0, // embed a google map image. if true map height and width needs to be define (1 || 0)
@@ -233,11 +234,20 @@
           animation: google.maps.Animation[plugin.settings.markerAnimation]
         });
         plugin.settings.markers[_i] = _marker; // store marker to markers object with id as its key
+        plugin.settings.latLngList[_i] = _latlng; // store map cache lat / long
         google.maps.event.addDomListener(_marker, 'click', function() { // add listener to handle marker click event
           ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
         });
       }
-      (plugin.settings.fitBounds === 1) ? _map.fitBounds(_map.getBounds()) : 0; // option to fit map zoom level to show all marker 
+      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
+        var _bounds = new google.maps.LatLngBounds();
+        for (_i in plugin.settings.latLngList) { // use stored map cache lat / long to determine map bounds
+          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+            _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
+          }
+        }
+        _map.fitBounds(_bounds); // fit these bounds to the map
+      }
       (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
     };
 
@@ -371,7 +381,7 @@
       });
     };
 
-    // public methods can be called like: plugin.methodName(arg1, arg2, ... argn) from inside the plugin or element.data('googleMaps').publicMethod(arg1, arg2, ... argn) from outside the plugin, where "element" is the element the plugin is attached to
+    // public methods can be called like: plugin.method(arg1, arg2, ... argn) from inside the plugin or $(element).data('googleMaps').method(arg1, arg2, ... argn) from outside the plugin, where "element" is the element the plugin is attached to
     
     // public methods below are for non static maps
     plugin.iconMarker = function(_i, _iconSrc) { // use to update marker icon src from outside of the plugin
@@ -404,7 +414,20 @@
         animation: google.maps.Animation[_animation]
       });
       plugin.settings.markers[_i] = _marker;  // add to store cache created marker
+      plugin.settings.latLngList[_i] = _latlng; // add to store map cache lat / long to determine map bounds
       _map.setCenter(_latlng); // center map base on marker lat / long
+      google.maps.event.addDomListener(_marker, 'click', function() { // add listener to handle marker click event
+        ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
+      });
+      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
+        var _bounds = new google.maps.LatLngBounds();
+        for (_i in plugin.settings.latLngList) { // use to store map cache lat / long to determine map bounds
+          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+            _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
+          }
+        }
+        _map.fitBounds(_bounds); // fit these bounds to the map
+      }
     }
 
     plugin.clearRoute = function() { // use to clear all route object
