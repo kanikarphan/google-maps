@@ -334,8 +334,8 @@
       } else if(!_end) {
         _destination.focus();
       } else {
-        var _clientLati = plugin.settings.currentLoc.latitude, // use store cach client lat
-            _clientLong = plugin.settings.currentLoc.longitude; // use store cach client long
+        var _clientLati = plugin.settings.currentLoc.latitude, // use store cache client latitude
+            _clientLong = plugin.settings.currentLoc.longitude; // use store cache client longitude
         (_start.toLowerCase().match(/^current location/)) ? _start = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for start point
         (_end.toLowerCase().match(/^current location/)) ? _end = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for end point
         _request = { // route options
