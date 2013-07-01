@@ -38,7 +38,7 @@
         _autocompOptions;
     // plugin default options. this is private property and is  accessible only from inside the plugin
     var defaults = { // default setting for plugin. (1 || 0) which is true or false
-      googleKey: metadata.googleKey || 'AIzaSyAfeURlP01EujqSxovazUPW4pg6jJxabc0', // google key is needed for static map. https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+      googleKey: metadata.googleKey || 'AIzaSyDocsnB-Sid_L4dNkIRWiyGwBiAyYiFICQ', // google key is needed for static map. https://developers.google.com/maps/documentation/javascript/tutorial#api_key
       address: metadata.address || [], // pass single or multiple address. spilt multiple address with ';'
       addressElem: metadata.addressElem || [], // use to select the address element
       mapHeight: metadata.mapHeight || "100%", // set map canvas height
@@ -59,7 +59,6 @@
       markersStatic: [], // use to store static marker geolocation
       latLngList: [], // use to store map cache lat / long
       infoContent: {}, // displays content in a floating window above the map
-      fitBounds: metadata.fitBounds || 0, // adjust map zoom to fit all markers into map viewport (1 || 0)
       mapStatic: metadata.mapStatic || 0, // embed a google map image. if true map height and width needs to be define (1 || 0)
       staticScale: metadata.staticScale || 1, // scale (zoom) the image to improve legibility
       routeShow: metadata.routeShow || 0, // enables/disables map routes (1 || 0)
@@ -239,13 +238,13 @@
           ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
         });
       }
-      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
-        var _bounds = new google.maps.LatLngBounds();
-        for (_i in plugin.settings.latLngList) { // use stored map cache lat / long to determine map bounds
-          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
-            _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
-          }
+      var _bounds = new google.maps.LatLngBounds();
+      for (_i in plugin.settings.latLngList) { // use stored map cache lat / long to determine map bounds
+        if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+          _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
+      }
+      if(_i > 0) {
         _map.fitBounds(_bounds); // fit these bounds to the map
       }
       (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
@@ -334,8 +333,8 @@
       } else if(!_end) {
         _destination.focus();
       } else {
-        var _clientLati = plugin.settings.currentLoc.latitude, // use store cach client lat
-            _clientLong = plugin.settings.currentLoc.longitude; // use store cach client long
+        var _clientLati = plugin.settings.currentLoc.latitude, // use store cache client latitude
+            _clientLong = plugin.settings.currentLoc.longitude; // use store cache client longitude
         (_start.toLowerCase().match(/^current location/)) ? _start = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for start point
         (_end.toLowerCase().match(/^current location/)) ? _end = new google.maps.LatLng(_clientLati, _clientLong) : 0; // use current location for end point
         _request = { // route options
@@ -419,13 +418,13 @@
       google.maps.event.addDomListener(_marker, 'click', function() { // add listener to handle marker click event
         ($.isFunction(plugin.settings.markerClick)) ? plugin.settings.markerClick.apply(this, [this]) : 0;
       });
-      if(plugin.settings.fitBounds === 1) { // option to fit map zoom level to show all marker 
-        var _bounds = new google.maps.LatLngBounds();
-        for (_i in plugin.settings.latLngList) { // use to store map cache lat / long to determine map bounds
-          if(plugin.settings.latLngList.hasOwnProperty(_i)) {
-            _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
-          }
+      var _bounds = new google.maps.LatLngBounds();
+      for (_i in plugin.settings.latLngList) { // use to store map cache lat / long to determine map bounds
+        if(plugin.settings.latLngList.hasOwnProperty(_i)) {
+          _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
+      }
+      if(_i > 0) {
         _map.fitBounds(_bounds); // fit these bounds to the map
       }
     }
