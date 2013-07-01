@@ -38,7 +38,7 @@
         _autocompOptions;
     // plugin default options. this is private property and is  accessible only from inside the plugin
     var defaults = { // default setting for plugin. (1 || 0) which is true or false
-      googleKey: metadata.googleKey || 'AIzaSyDocsnB-Sid_L4dNkIRWiyGwBiAyYiFICQ', // google key is needed for static map. https://developers.google.com/maps/documentation/javascript/tutorial#api_key
+      googleKey: metadata.googleKey || 'AIzaSyAN6I6bBZnV2Uxutfz1oIqAo639S8Mle28', // google key is needed for static map. https://developers.google.com/maps/documentation/javascript/tutorial#api_key
       address: metadata.address || [], // pass single or multiple address. spilt multiple address with ';'
       addressElem: metadata.addressElem || [], // use to select the address element
       mapHeight: metadata.mapHeight || "100%", // set map canvas height
@@ -243,9 +243,9 @@
         if(plugin.settings.latLngList.hasOwnProperty(_i)) {
           _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
-      }
-      if(_i > 0) {
-        _map.fitBounds(_bounds); // fit these bounds to the map
+        if(_i > 0) {
+          _map.fitBounds(_bounds); // fit these bounds to the map
+        }
       }
       (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
     };
@@ -423,9 +423,9 @@
         if(plugin.settings.latLngList.hasOwnProperty(_i)) {
           _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
-      }
-      if(_i > 0) {
-        _map.fitBounds(_bounds); // fit these bounds to the map
+        if(_i > 0) {
+          _map.fitBounds(_bounds); // fit these bounds to the map
+        }
       }
     }
 
