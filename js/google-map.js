@@ -243,9 +243,9 @@
         if(plugin.settings.latLngList.hasOwnProperty(_i)) {
           _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
-      }
-      if(_i > 0) {
-        _map.fitBounds(_bounds); // fit these bounds to the map
+        if(_i > 0) {
+          _map.fitBounds(_bounds); // fit these bounds to the map
+        }
       }
       (plugin.settings.infoContent.length >= 1) ? infoMngr() : 0 // init infoMngr method
     };
@@ -423,9 +423,9 @@
         if(plugin.settings.latLngList.hasOwnProperty(_i)) {
           _bounds.extend(plugin.settings.latLngList[_i]); // increase the bounds to take this point
         }
-      }
-      if(_i > 0) {
-        _map.fitBounds(_bounds); // fit these bounds to the map
+        if(_i > 0) {
+          _map.fitBounds(_bounds); // fit these bounds to the map
+        }
       }
     }
 
