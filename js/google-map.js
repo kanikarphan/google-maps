@@ -91,7 +91,7 @@
     
     plugin.init = function() { // the constructor method that gets called when the object is created
       plugin.settings = $.extend({}, defaults, options, metadata); // the plugin's final properties are the merged default and user-provided options (if any)
-      ($.isFunction(plugin.settings.onStart)) ? plugin.settings.onStart() : 0; // for callback before the map is rendering
+      ($.isFunction(plugin.settings.mapStart)) ? plugin.settings.mapStart() : 0; // for callback before the map is rendering
       if(plugin.settings.textRoute === 1) {
         routeText(); // init routeText method
       } else { 
@@ -141,7 +141,7 @@
       };
       _map = new google.maps.Map(_element[0], _mapOptions); // google map v3 api method
       google.maps.event.addListenerOnce(_map, 'tilesloaded', function () { // for on callback when map is done rendering
-        ($.isFunction(plugin.settings.onComplete)) ? plugin.settings.onComplete() : 0;
+        ($.isFunction(plugin.settings.mapComplete)) ? plugin.settings.mapComplete() : 0;
       });
       google.maps.event.addDomListener(_map, 'click', function() { // add listener for when the map is click
         ($.isFunction(plugin.settings.mapClick)) ? plugin.settings.mapClick() : 0;
